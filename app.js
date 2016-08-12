@@ -2,22 +2,23 @@
 
 var env = process.env.NODE_ENV || 'development';
 
-var path        = require('path');
-var fs          = require('fs');
-var http        = require('http');
-var express     = require('express');
-var yaml        = require('js-yaml');
-var compression = require('compression');
-var sitemap     = require('express-sitemap');
+var path         = require('path');
+var fs           = require('fs');
+var http         = require('http');
+var express      = require('express');
+var yaml         = require('js-yaml');
 
-var app = express();
+var app          = express();
 
 // middleware
 var logger       = require('morgan');
 var serveStatic  = require('serve-static');
 var errorHandler = require('errorhandler');
+var compression  = require('compression');
+var sitemap      = require('express-sitemap');
 var enforce      = require('express-sslify');
 var csp          = require('express-csp');
+var minify       = require('express-minify');
 
 var helpers      = require('./lib/helpers');
 var routes       = require('./routes');
@@ -54,6 +55,7 @@ if (env === 'production') {
 
 // middleware
 app.use(compression());
+app.use(minify());
 app.set('etag', false);
 
 app.use(serveStatic(path.join(__dirname, 'public'), {
